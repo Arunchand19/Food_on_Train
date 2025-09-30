@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your Cart</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+li {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(0,0,0,.1) 0px 4px 10px;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: .25rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.total-bill {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+}
+
+form {
+    text-align: center; 
+    margin-top: 20px; 
+}
+</style>
+</head>
+<body>
+<h1>Your Cart</h1>
+
+<img src="https://media.istockphoto.com/id/1206806317/vector/shopping-cart-icon-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=1RRQJs5NDhcB67necQn1WCpJX2YMfWZ4rYi1DFKlkNA=" alt="Cart" height="200" width="200">
+
+<ul>
+    {% for item in cart_items %}
+    <li>
+        {{ item.name }} - ₹{{ item.price }} x {{ item.quantity }} = ₹{{ item.price * item.quantity }}
+        <form method="POST" action="{{ url_for('delete_from_cart') }}" style="display:inline;">
+            <input type="hidden" name="item_id" value="{{ item.id }}">
+            <label for="delete_quantity">Quantity to delete:</label>
+            <input type="number" name="delete_quantity" min="1" max="{{ item.quantity }}" value="1" required>
+            <button type="submit">Delete</button>
+        </form>
+    </li>
+    {% else %}
+    <li>Your cart is empty.</li>
+    {% endfor %}
+</ul>
+
+<h2 class="total-bill">Total Bill: ₹{{ total_bill }}</h2>
+
+<form action="{{ url_for('payment') }}" method="GET">
+    <button type="submit">Proceed to Payment</button>
+</form>
+</body>
+</html>

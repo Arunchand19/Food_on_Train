@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UPI Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #040572;
+        }
+        .form-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: .25rem;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        .image-container {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+    <script>
+        function validateUPI() {
+            var upiId = document.getElementById("upi_id").value;
+            var email = document.getElementById("email").value;
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            var upiPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+$/;
+
+           
+            if (!upiPattern.test(upiId)) {
+                document.getElementById("upi_error").innerHTML = "Please enter a valid UPI ID (e.g., test@ybl).";
+                return false;
+            } else {
+                document.getElementById("upi_error").innerHTML = "";
+            }
+
+            
+            if (!emailPattern.test(email)) {
+                document.getElementById("email_error").innerHTML = "Please enter a valid email address.";
+                return false;
+            } else {
+                document.getElementById("email_error").innerHTML = "";
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>UPI PAYMENT</h1>
+    <div class="image-container">
+    <img src="https://cdn.zeebiz.com/sites/default/files/2024/01/03/274966-upigpay.jpg" alt="UPI Image" height="300" width="400">
+    </div>
+    <div class="form-container">
+        <form method="POST" onsubmit="return validateUPI()">
+            <label for="upi_id">Enter UPI ID:</label><br>
+            <input type="text" id="upi_id" name="upi_id" required><br>
+            <span id="upi_error" class="error"></span><br>
+
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+            <span id="email_error" class="error"></span><br><br>
+
+            <button type="submit">Pay</button>
+        </form>
+    </div>
+</body>
+</html>

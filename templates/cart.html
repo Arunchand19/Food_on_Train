@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart</title>
+    <style>
+        /* Existing styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2rem;
+            color: #01070e;
+            margin-bottom: 30px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        li img {
+            max-width: 50px;
+            margin-right: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: .25rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #218838;
+        }
+
+        button[type="submit"] {
+            background: #218838;
+            color: white;
+            border: none;
+        }
+
+        button[type="submit"]:hover {
+            background: #218838;
+        }
+
+        .total-bill {
+            font-size: 1.5rem;
+            color: #2b06cf;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .addresses {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .addresses input {
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border: 2px solid #ddd;
+            border-radius: .25rem;
+        }
+
+        .addresses input:focus {
+            border-color: #007bff;
+        }
+
+        .cart-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+
+    <script>
+        function validateForm() {
+            const seatInput = document.getElementById('seatno').value;
+            const dateInput = document.getElementById('travel-date').value;
+            const today = new Date();
+            const inputDate = new Date(dateInput);
+
+            // Reset time for accurate date comparison
+            today.setHours(0, 0, 0, 0);
+            inputDate.setHours(0, 0, 0, 0);
+
+            // Validation for seat number
+            if (seatInput === "") {
+                alert("Please enter your seat and coach number.");
+                return false;
+            }
+
+            // Validation for travel date
+            if (dateInput === "") {
+                alert("Please select a valid travel date.");
+                return false;
+            }
+
+            // Ensure the date is not in the past
+            if (inputDate < today) {
+                alert("The travel date must be today or in the future.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Set minimum date to today in the required format (yyyy-mm-dd)
+        window.onload = function () {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            document.getElementById('travel-date').min = `${year}-${month}-${day}`;
+        };
+    </script>
+</head>
+
+<body>
+
+    <h1>Your Cart</h1>
+
+    <div class="image-container">
+        <img src="https://media.istockphoto.com/id/1206806317/vector/shopping-cart-icon-isolated-on-white-background.jpg?s=612x612&w=0&k=20&c=1RRQJs5NDhcB67necQn1WCpJX2YMfWZ4rYi1DFKlkNA=" 
+             alt="Cart" height="200" width="200">
+    </div>
+
+    <ul>
+        {% for item in cart_items %}
+        <li>
+            <div><strong>{{ item.name }}</strong><br>₹{{ item.price }} x {{ item.quantity }} = ₹{{ item.price * item.quantity }}</div>
+            <form method="POST" action="{{ url_for('delete_from_cart') }}" style="display:inline;">
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <input type="number" name="delete_quantity" min="1" max="{{ item.quantity }}" value="1" required>
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% else %}
+        <li>Your cart is empty.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="addresses">
+        <br>
+        <label for="travel-date">Enter Travel date:</label>
+        <input type="date" id="travel-date" name="travel_date" required>
+        <br><br>
+        <label for="seatno">Enter your seat and coach:</label>
+        <input type="text" name="address" id="seatno" placeholder="e.g., Seat 12, Coach B" required>
+    </div>
+
+    <h2 class="total-bill">Total Bill: ₹{{ total_bill }}</h2>
+
+    <div class="cart-actions">
+        <form action="{{ url_for('payment') }}" method="GET" onsubmit="return validateForm();">
+            <button type="submit">Proceed to Payment</button>
+        </form>
+    </div>
+
+</body>
+
+</html>

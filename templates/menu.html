@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Menu</title>
+<style>
+body {
+   font-family: Arial, sans-serif;
+   background-color: #f8f9fa;
+   color: #333;
+}
+
+h1 {
+   text-align: center;
+}
+
+ul {
+   list-style-type: none;
+   padding-left: 0;
+}
+
+li {
+   margin-bottom: 20px;
+   padding: 15px;
+   background-color: white;
+   border-radius: 5px;
+   box-shadow: rgba(0,0,0,.1) 0px 4px 10px;
+}
+
+button {
+   padding: 10px;
+   background-color: #28a745;
+   color: white;
+   border: none;
+   border-radius: .25rem;
+   cursor: pointer;
+}
+
+button:hover {
+   background-color: #218838;
+}
+
+img {
+   max-width: 100%;
+   height: auto;
+}
+</style>
+</head>
+<body>
+<h1>Menu for Restaurant ID {{ restaurant_id }}</h1>
+
+<ul>
+{% for item in menu_items %}
+<li>
+    <img src="{{ item[3] }}" alt="{{ item[1] }} Image" style="height:100px; width:100px;">
+    <p>{{ item[1] }} - ₹{{ item[2] }}</p>
+    <form method="POST" action="{{ url_for('add_to_cart') }}">
+        <input type="hidden" name="item_id" value="{{ item[0] }}">
+        <input type="hidden" name="item_name" value="{{ item[1] }}">
+        <input type="hidden" name="item_price" value="{{ item[2] }}">
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" min="1" value="1" required>
+        <button type="submit">Add to Cart</button>
+    </form>
+</li>
+{% else %}
+<li>No menu items available.</li>
+{% endfor %}
+</ul>
+
+<a href="{{ url_for('restaurants', station_code='XYZ') }}">Back to Restaurants</a>
+</body>
+</html>

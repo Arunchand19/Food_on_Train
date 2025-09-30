@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Restaurants</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+    
+        h1 {
+            text-align: center;
+        }
+    
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+    
+        li {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: rgba(0, 0, 0, .1) -2px -2px;
+        }
+    
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    
+        .graph-container {
+            display: flex;
+            gap: 60px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+    
+        .graph-container img {
+            width: 400px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Restaurants at Your Station</h1>
+    <div class="graph-container">
+        <img src="https://relfood.com/assets/img/orderfoodintrainonline.webp" alt="Main Image" height="600" width="500">
+        <img src="data:image/png;base64,{{ graph_url }}" alt="Bar Graph" height ="600" width="500">
+    </div>
+
+    <ul>
+        {% for restaurant in restaurants %}
+        <li>{{ restaurant[1] }}
+            <a href="{{ url_for('menu', restaurant_id=restaurant[0]) }}"> View Menu</a>
+        </li>
+        {% else %}
+        <li>No restaurants available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

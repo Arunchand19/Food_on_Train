@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Card Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            padding: 30px;
+            color: #190865;
+            font-size: 28px;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            border-color: #28a745;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: -8px;
+            margin-bottom: 10px;
+        }
+        .success {
+            color: green;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .eye-icon {
+            position: absolute;
+            right: 20px;
+            top: 35px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #28a745;
+        }
+        .input-container {
+            position: relative;
+            width: 100%;
+        }
+    </style>
+    <script>
+        function validateCardPayment() {
+            var cardNumber = document.getElementById("card_number").value;
+            var expiryDate = document.getElementById("expiry_date").value;
+            var cvv = document.getElementById("cvv").value;
+            var email = document.getElementById("email").value;
+            
+            var cardPattern = /^\d{16}$/; 
+            var expiryPattern = /^(0[1-9]|1[0-2])\/\d{2}$/; 
+            var cvvPattern = /^\d{3}$/; 
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+
+            var today = new Date();
+            var expiryMonth = parseInt(expiryDate.split("/")[0]);
+            var expiryYear = parseInt("20" + expiryDate.split("/")[1]);
+
+            if (!cardPattern.test(cardNumber)) {
+                document.getElementById("card_error").innerText = "Please enter a valid 16-digit card number.";
+                return false;
+            } else {
+                document.getElementById("card_error").innerText = "";
+            }
+
+            if (!expiryPattern.test(expiryDate)) {
+                document.getElementById("expiry_error").innerText = "Please enter a valid expiry date (MM/YY).";
+                return false;
+            } else {
+                document.getElementById("expiry_error").innerText = "";
+            }
+
+            if (expiryYear < today.getFullYear() || (expiryYear === today.getFullYear() && expiryMonth < today.getMonth() + 1)) {
+                document.getElementById("expiry_error").innerText = "Card expiry date must be in the future.";
+                return false;
+            }
+
+            if (!cvvPattern.test(cvv)) {
+                document.getElementById("cvv_error").innerText = "Please enter a valid 3-digit CVV.";
+                return false;
+            } else {
+                document.getElementById("cvv_error").innerText = "";
+            }
+
+            if (!emailPattern.test(email)) {
+                document.getElementById("email_error").innerText = "Please enter a valid email address.";
+                return false;
+            } else {
+                document.getElementById("email_error").innerText = "";
+            }
+
+            return true;
+        }
+
+        
+        function toggleCVV() {
+            var cvvInput = document.getElementById("cvv");
+            var cvvIcon = document.getElementById("cvv_icon");
+
+            if (cvvInput.type === "password") {
+                cvvInput.type = "text"; 
+                cvvIcon.innerHTML = "👁️"; 
+            } else {
+                cvvInput.type = "password"; 
+                cvvIcon.innerHTML = "🙈"; 
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>CARD PAYMENT</h1>
+    <div class="form-container">
+        <form method="POST" onsubmit="return validateCardPayment()">
+            <label for="card_number">Card Number:</label>
+            <input type="text" id="card_number" name="card_number" required><br>
+            <span id="card_error" class="error"></span>
+
+            <label for="expiry_date">Expiry Date (MM/YY):</label>
+            <input type="text" id="expiry_date" name="expiry_date" required><br>
+            <span id="expiry_error" class="error"></span>
+
+            <label for="cvv">CVV:</label>
+            <div class="input-container">
+                <input type="password" id="cvv" name="cvv" required><br>
+                <span id="cvv_error" class="error"></span>
+                <span id="cvv_icon" class="eye-icon" onclick="toggleCVV()">🙈</span>
+            </div>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            <span id="email_error" class="error"></span><br>
+
+            <button type="submit">Pay</button>
+        </form>
+
+        <div id="payment_status" class="success"></div>
+    </div>
+</body>
+</html>

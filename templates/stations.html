@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Select Station</title>
+</head>
+<body>
+    <h1>Stations for Train: {{ train_number }}</h1>
+    <form method="POST" action="{{ url_for('stations', train_number=train_number) }}">
+        <label for="station_name">Select Station:</label>
+        <select id="station_name" name="station_name" required>
+            {% for station in stations %}
+                <option value="{{ station }}">{{ station }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTP VERIFY</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+        }
+        .form-container {
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: .25rem;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: .25rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .timer {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<h1>OTP Verification</h1>
+
+<div class="form-container">
+    <form action="/validate" method="post" id="otpForm">
+        <h3>A One-Time Password (OTP) has been sent to your email. Please check and enter it below:</h3>
+        <label for="otp">Enter OTP:</label><br>
+        <input type="text" id="otp" name="otp" required><br><br>
+        <button type="submit" id="submitBtn">Submit</button>
+    </form>
+    <div class="timer" id="timer">Time left: <span id="timeLeft">30</span> seconds</div>
+</div>
+
+{% if message %}
+    <div class="message">
+        <p class="{% if message == 'OTP verified successfully! Food will deliver to your seat.' %}success{% else %}error{% endif %}">
+            {{ message }}
+        </p>
+    </div>
+{% endif %}
+
+<script>
+   
+    let timeLeft = {{ time_left | tojson if time_left is defined else 30 }}; 
+    const timerElement = document.getElementById('timeLeft');
+    const submitBtn = document.getElementById('submitBtn');
+    let timerInterval;
+
+    
+    const startTimer = () => {
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerElement.textContent = 'OTP has expired.';
+                submitBtn.disabled = true; 
+            }
+        }, 1000);
+    };
+
+    
+    const stopTimer = () => {
+        clearInterval(timerInterval);
+    };
+
+    
+    {% if message == 'OTP verified successfully! Food will deliver to your seat.' %}
+        stopTimer(); 
+        document.getElementById('timer').style.display = 'none';  
+    {% else %}
+       
+        startTimer();
+    {% endif %}
+</script>
+
+</body>
+</html>
