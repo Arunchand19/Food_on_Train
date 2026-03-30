@@ -2,7 +2,9 @@
 
 A web application that allows train passengers to order food from restaurants at upcoming stations and get it delivered directly to their seat.
 
----
+<img width="1917" height="908" alt="image" src="https://github.com/user-attachments/assets/5d4220d8-bfab-45e8-8d41-af661ba108fd" />
+
+<img width="1897" height="904" alt="Screenshot 2024-11-23 161013" src="https://github.com/user-attachments/assets/8f28e224-9f03-4c52-87c5-30e820f8263b" />
 
 ## 📋 Table of Contents
 
